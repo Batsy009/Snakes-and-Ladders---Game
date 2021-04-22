@@ -5,6 +5,7 @@ To play the game :
 Open game.py and run it.
 
 Models -
+
   Snakes,
   Ladders,
   Players,
@@ -12,6 +13,7 @@ Models -
   Entities.
   
 Features -
+
 No. of Players : n (any number of players).
 
 Flexible entities,

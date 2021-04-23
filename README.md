@@ -21,7 +21,7 @@ Open game.py and run it.
 
 * Multiple/ Bonus turns if the player rolls 6.
 
-* No bonus for 6 when player gets bitten by snake.
+* No bonus for dice roll of 6 when player gets bitten by snake.
 
 * Flexible entities.
 

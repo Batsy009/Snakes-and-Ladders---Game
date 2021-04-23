@@ -19,6 +19,10 @@ Open game.py and run it.
 
 * No. of Players : n (any number of players).
 
+* Multiple/ Bonus turns if the player rolls 6.
+
+* No bonus for 6 when player gets bitten by snake.
+
 * Flexible entities.
 
 * Scalable and Reusable Code.

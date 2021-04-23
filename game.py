@@ -20,61 +20,78 @@ for x in range(0, n):
 
 
 # Turn function
-def next_turn(p):
-    i = all_players.index(p)
+def next_turn(pr):
+    i = all_players.index(pr)
     if i == len(all_players) - 1:
         i = -1
     return all_players[i + 1]
 
 
-def play():
-    print("\nLet's Begin the Game...")
+def dice():
+    dice_roll = random.randint(1, 6)
+    print(f"Dice rolled is {dice_roll}")
+    return dice_roll
+
+
+def check_snake_bite(new_position, player_name):
+    # Snake Bite Check.
+    for i in entities.all_snakes:
+        if i.head == new_position:
+            new_position = i.tail
+            print(f"Ohh! {player_name}, You got bit by Snake. You moved from {i.head} to {i.tail}")
+            return True, new_position
+    return False, new_position
+
+
+def check_ladder_jump(new_position, player_name):
+    # Ladder Jump Check.
+    for i in entities.all_ladders:
+        if i.tail == new_position:
+            new_position = i.head
+            print(f"Hurray! {player_name}, You got a ladder jump. You moved from {i.tail} to {i.head}")
+            return True, new_position
+    return False, new_position
+
+
+def play(curr_player):
+    time.sleep(0.5)
+    print("-" * 80)
+    print(f"It's {curr_player.name}'s turn. \nCurrent position : {curr_player.position}")
+    input("\nPress 'ENTER' to Roll the Dice \n")
+    print(f"\nRolling the dice...\n")
+    time.sleep(0.5)
+
+    d = dice()
+    new_position = curr_player.position + d
+    print(f"You moved from {curr_player.position} to {new_position}")
+    bite, new_position = check_snake_bite(new_position, curr_player.name)
+    jump, new_position = check_ladder_jump(new_position, curr_player.name)
+
+    if new_position <= b.size:
+        curr_player.position = new_position
+    else:
+        print("Oh!! You rolled more. Waste of a turn.")
+
+    return d, bite, jump
+
+
+def main():
     p = all_players[0]
 
     while True:
-        time.sleep(0.5)
-        print("-" * 80)
-        print(f"It's {p.name}'s turn. \nCurrent position : {p.position}")
-        input("\nPress 'ENTER' to Roll the Dice \n")
-
-        time.sleep(0.5)
-        print(f"\nRolling the dice...\n")
-        time.sleep(0.5)
-        dice_roll = random.randint(1, 6)
-        print(f"Dice rolled is: {dice_roll}")
-        new_position = p.position + dice_roll
-
-        # Snake Bite Check.
-        for i in entities.all_snakes:
-            if i.head == new_position:
-                new_position = i.tail
-                print(f"Ohh! {p.name}, You got bit by Snake. You moved from {i.head} to {i.tail}")
-
-        # Ladder Jump Check.
-        for i in entities.all_ladders:
-            if i.tail == new_position:
-                new_position = i.head
-                print(f"Hurray! {p.name}, You got a ladder jump. You moved from {i.tail} to {i.head}")
-
-        # Check if Player position is in range of Board Size.
-        if new_position > b.size:
-            print(f"\nOhh! {p.name}, You rolled more. Waste of turn. \nNo change in position.\n")
-            p = next_turn(p=p)
-            continue
-        print(f"{p.name} moved from {p.position} to {new_position}")
-        p.position = new_position
-        time.sleep(0.5)
-
-        # Win Condition
+        dice_roll, bite, jump = play(p)
         if p.position == b.size:
-            print("Hurray!, You Reached 100. ")
-            print(f"\n---------WINNER IS {p.name}. CONGRATULATIONS!----------\n")
-            time.sleep(1)
+            print(f"Congratulations!!. {p} won")
             break
 
-        # passing the turn to next player
-        p = next_turn(p=p)
+        if dice_roll == 6 and bite is True:
+            print("Unlucky. You rolled 6 but got bitten by the snake.")
+            p = next_turn(p)
+
+        elif dice_roll != 6:
+            p = next_turn(p)
+        else:
+            print("Hurray. You got bonus move!!")
 
 
-# Run here.
-play()
+main()
